@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html data-theme="dark">
+<head>
+  <title>DevOps Sticky Tool</title>
+  <link rel="stylesheet" href="styles.css">
+  <!-- Add type="module" to use ES modules -->
+  <script type="module" src="renderer-main.js"></script>
+</head>
+<body>
+  <div class="title-bar">
+    <div>DevOps Helper</div>
+    <div class="title-bar-controls">
+      <button class="new-session-btn" onclick="startNewSession()">New Session</button>
+      <button class="sessions-btn" onclick="toggleSessionsPanel()">History</button>
+      <div class="window-controls">
+        <button class="window-control pin-btn" id="pinButton" onclick="togglePin()" title="Pin window (Alt+P)">📌</button>
+        <button class="window-control minimize-btn" onclick="minimizeWindow()" title="Minimize (Alt+M)">—</button>
+        <button class="window-control maximize-btn" onclick="toggleMaximize()" title="Maximize (Alt+X)">□</button>
+      </div>
+      <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+      <button class="settings-btn" onclick="toggleSettings()">⚙️</button>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="tabs">
+      <button class="tab-button active" id="chatTab" onclick="switchTab('chat')">Chat</button>
+      <button class="tab-button" id="terminalTab" onclick="switchTab('terminal')">Terminal</button>
+    </div>
+
+    <div class="tab-content" id="chatContent">
+      <div class="chat-container">
+        <div class="session-header" id="sessionHeader">
+          <input type="text" class="session-title" id="sessionTitle" placeholder="Untitled Session" onchange="updateSessionTitle()">
+          <span class="session-id" id="sessionId">#1</span>
+        </div>
+        <div class="chat-messages" id="chatMessages">
+          <div class="message assistant-message">
+            <p>Hello! I'm your DevOps Assistant. How can I help you today?</p>
+          </div>
+        </div>
+        <div class="loading-indicator" id="loadingIndicator">AI is thinking...</div>
+        <div class="chat-input-container">
+          <textarea 
+            class="chat-input" 
+            id="chatInput" 
+            placeholder="Type your question or paste logs here... (Press Enter to send)" 
+            rows="1"
+            onkeydown="handleKeyDown(event)"
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="tab-content" id="terminalContent" style="display: none;">
+      <div class="terminal-container">
+        <div class="terminal-header">
+          <div class="terminal-title">Terminal Session</div>
+          <div class="terminal-controls">
+            <select id="terminalType" onchange="updateTerminal()">
+              <option value="bash">Bash</option>
+              <option value="powershell">PowerShell</option>
+              <option value="cmd">Command Prompt</option>
+            </select>
+            <button onclick="clearTerminal()">Clear</button>
+          </div>
+        </div>
+        
+        <!-- Suggested Commands Section -->
+        <div id="suggestedCommands" class="suggested-commands-container">
+          <!-- Suggested commands will be dynamically loaded here -->
+        </div>
+        
+        <div class="terminal-output" id="terminalOutput">
+          <div class="terminal-line">
+            <span class="terminal-prompt">user@devops:~$</span>
+            <span class="terminal-welcome">Welcome to DevOps Terminal. This is a simulated terminal for command execution.</span>
+          </div>
+        </div>
+        <div class="terminal-input-container">
+          <span class="terminal-prompt" id="terminalPrompt">user@devops:~$</span>
+          <input 
+            type="text" 
+            class="terminal-input" 
+            id="terminalInput" 
+            placeholder="Enter command..." 
+            onkeydown="handleTerminalKeyDown(event)"
+            autocomplete="off"
+            spellcheck="false"
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sessions Panel -->
+  <div class="sessions-panel" id="sessionsPanel">
+    <div class="sessions-header">
+      <h3>Chat History</h3>
+      <button class="close-sessions" onclick="toggleSessionsPanel()">×</button>
+    </div>
+    
+    <div class="sessions-content">
+      <div class="sessions-list" id="sessionsList">
+        <!-- Sessions will be dynamically loaded here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Settings Panel -->
+  <div class="settings-panel" id="settingsPanel">
+    <div class="settings-header">
+      <h3>Settings</h3>
+      <button class="close-settings" onclick="toggleSettings()">×</button>
+    </div>
+    
+    <div class="settings-content">
+      <div class="settings-section">
+        <h4>API Keys</h4>
+        <div class="api-input-group">
+          <label for="openai-key">OpenAI API Key</label>
+          <input 
+            type="password" 
+            id="openai-key" 
+            placeholder="sk-..." 
+            onchange="saveSettings()"
+          >
+          <button class="show-hide-key" onclick="togglePasswordVisibility(this)">👁️</button>
+        </div>
+
+        <div class="api-input-group">
+          <label for="azure-key">Azure API Key (Optional)</label>
+          <input 
+            type="password" 
+            id="azure-key" 
+            placeholder="Enter Azure key..." 
+            onchange="saveSettings()"
+          >
+          <button class="show-hide-key" onclick="togglePasswordVisibility(this)">👁️</button>
+        </div>
+
+        <div class="api-input-group">
+          <label for="claude-key">Claude API Key (Optional)</label>
+          <input 
+            type="password" 
+            id="claude-key" 
+            placeholder="Enter Claude key..." 
+            onchange="saveSettings()"
+          >
+          <button class="show-hide-key" onclick="togglePasswordVisibility(this)">👁️</button>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Model Settings</h4>
+        <div class="select-group">
+          <label for="ai-model">AI Model</label>
+          <select id="ai-model" onchange="saveSettings()">
+            <option value="gpt-4">GPT-4</option>
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+            <option value="claude-3-opus">Claude 3 Opus</option>
+            <option value="claude-3-sonnet">Claude 3 Sonnet</option>
+          </select>
+        </div>
+
+        <div class="select-group">
+          <label for="temperature">Temperature</label>
+          <input 
+            type="range" 
+            id="temperature" 
+            min="0" 
+            max="2" 
+            step="0.1" 
+            value="0.7"
+            onchange="updateTempValue(this.value)"
+          >
+          <span id="temp-value">0.7</span>
+        </div>
+      </div>
+
+      <div class="settings-section">
+        <h4>Terminal Settings</h4>
+        <div class="setting-checkbox">
+          <input 
+            type="checkbox" 
+            id="allow-command-execution" 
+            onchange="saveSettings()"
+          >
+          <label for="allow-command-execution">Allow real command execution (be careful!)</label>
+        </div>
+        <p class="setting-description">
+          When enabled, commands will be executed on your system. Disable for simulation only.
+        </p>
+      </div>
+
+      <div class="settings-section">
+        <h4>Appearance</h4>
+        <div class="theme-select">
+          <label>Theme</label>
+          <div class="theme-buttons">
+            <button onclick="setTheme('light')" class="theme-btn light">Light</button>
+            <button onclick="setTheme('dark')" class="theme-btn dark">Dark</button>
+            <button onclick="setTheme('system')" class="theme-btn">System</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="resize-handle">⌟</div>
+</body>
+</html>

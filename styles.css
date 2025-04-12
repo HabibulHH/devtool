@@ -1,0 +1,866 @@
+:root[data-theme="dark"] {
+  --bg-primary: rgba(30, 30, 30, 0.95);
+  --bg-secondary: rgba(40, 40, 40, 0.95);
+  --text-primary: #ffffff;
+  --text-secondary: #a0a0a0;
+  --accent: #0084ff;
+}
+
+:root[data-theme="light"] {
+  --bg-primary: rgba(245, 245, 245, 0.95);
+  --bg-secondary: rgba(255, 255, 255, 0.95);
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --accent: #0084ff;
+}
+
+body {
+  margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: system-ui, -apple-system, sans-serif;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.title-bar {
+  -webkit-app-region: drag;
+  cursor: move;
+  user-select: none;
+  height: 40px;
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.title-bar-controls {
+  -webkit-app-region: no-drag;
+  display: flex;
+  gap: 10px;
+}
+
+.new-session-btn, .sessions-btn {
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  cursor: pointer;
+}
+
+.content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Chat Window Styles */
+.chat-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.chat-messages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  max-width: 80%;
+  padding: 12px 16px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.user-message {
+  align-self: flex-end;
+  background-color: var(--accent);
+  color: white;
+}
+
+.assistant-message {
+  align-self: flex-start;
+  background-color: var(--bg-secondary);
+  border: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.chat-input-container {
+  padding: 10px;
+  border-top: 1px solid rgba(128, 128, 128, 0.2);
+  display: flex;
+}
+
+.chat-input {
+  flex: 1;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  resize: none;
+  min-height: 24px;
+  max-height: 150px;
+}
+
+.send-button {
+  padding: 0 15px;
+  border-radius: 8px;
+  border: none;
+  background: var(--accent);
+  color: white;
+  cursor: pointer;
+}
+
+.send-button:disabled {
+  background: rgba(128, 128, 128, 0.3);
+  cursor: not-allowed;
+}
+
+.loading-indicator {
+  display: none;
+  align-self: center;
+  margin: 10px 0;
+  font-style: italic;
+  color: var(--text-secondary);
+}
+
+/* Settings Panel Styles */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: -350px;
+  width: 350px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-left: 1px solid rgba(128, 128, 128, 0.2);
+  transition: right 0.3s ease;
+  z-index: 1000;
+}
+
+.settings-panel.open {
+  right: 0;
+}
+
+.settings-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-settings {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.settings-content {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.settings-section {
+  margin-bottom: 30px;
+}
+
+.settings-section h4 {
+  margin-bottom: 15px;
+  color: var(--text-secondary);
+}
+
+.api-input-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+.api-input-group label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.api-input-group input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.show-hide-key {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.7;
+}
+
+.select-group {
+  margin-bottom: 15px;
+}
+
+.select-group select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.theme-buttons {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px;
+}
+
+.theme-btn {
+  padding: 8px 15px;
+  border-radius: 4px;
+  border: 1px solid rgba(128, 128, 128, 0.3);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+input[type="range"] {
+  width: 100%;
+  margin-top: 5px;
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(128, 128, 128, 0.5);
+}
+
+.resize-handle {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  height: 16px;
+  cursor: nwse-resize;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 16px;
+  color: var(--color-border);
+  transition: color 0.2s, transform 0.2s;
+  z-index: 1000;
+  user-select: none;
+}
+
+.resize-handle:hover {
+  color: var(--color-accent);
+  transform: scale(1.2);
+}
+
+/* Session header */
+.session-header {
+  padding: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+  background: var(--bg-secondary);
+}
+
+.session-title {
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: bold;
+  width: 70%;
+  padding: 5px;
+}
+
+.session-title:focus {
+  outline: 1px solid var(--accent);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.session-id {
+  color: var(--text-secondary);
+  font-size: 14px;
+}
+
+/* Sessions panel */
+.sessions-panel {
+  position: fixed;
+  top: 0;
+  left: -350px;
+  width: 350px;
+  height: 100vh;
+  background: var(--bg-secondary);
+  border-right: 1px solid rgba(128, 128, 128, 0.2);
+  transition: left 0.3s ease;
+  z-index: 1000;
+}
+
+.sessions-panel.open {
+  left: 0;
+}
+
+.sessions-header {
+  padding: 15px;
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.close-sessions {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.sessions-content {
+  padding: 15px;
+  overflow-y: auto;
+  max-height: calc(100vh - 60px);
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.session-item {
+  padding: 10px;
+  border-radius: 6px;
+  background: var(--bg-primary);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.session-item:hover {
+  background: rgba(128, 128, 128, 0.1);
+}
+
+.session-item.active {
+  border-left: 3px solid var(--accent);
+}
+
+.session-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.session-item-title {
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.session-item-id {
+  color: var(--text-secondary);
+  font-size: 12px;
+}
+
+.session-item-date {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.session-item-preview {
+  font-size: 13px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Window control styles */
+.window-controls {
+  display: flex;
+  gap: 4px;
+}
+
+.window-control {
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.window-control:hover {
+  background-color: var(--color-hover);
+}
+
+.pin-btn.active {
+  background-color: var(--color-accent);
+  color: var(--color-bg);
+}
+
+/* Keyboard shortcut hint */
+.shortcut-hint {
+  position: fixed;
+  bottom: 10px;
+  left: 10px;
+  background: var(--bg-secondary);
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.shortcut-hint.visible {
+  opacity: 1;
+}
+
+/* Tooltip styles */
+[title] {
+  position: relative;
+}
+
+[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--bg-secondary);
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  white-space: nowrap;
+  z-index: 1000;
+}
+
+/* Tabs styles */
+.tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border-bottom: 1px solid rgba(128, 128, 128, 0.2);
+}
+
+.tab-button {
+  padding: 10px 20px;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: all 0.3s;
+}
+
+.tab-button.active {
+  color: var(--text-primary);
+  border-bottom: 2px solid var(--accent);
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.tab-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Terminal styles */
+.terminal-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #000;
+  color: #f0f0f0;
+  font-family: 'Courier New', monospace;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.terminal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 10px;
+  background: #333;
+  border-bottom: 1px solid #444;
+}
+
+.terminal-title {
+  font-weight: bold;
+}
+
+.terminal-controls {
+  display: flex;
+  gap: 10px;
+}
+
+.terminal-controls select, .terminal-controls button {
+  padding: 2px 8px;
+  background: #444;
+  color: #f0f0f0;
+  border: none;
+  border-radius: 3px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.terminal-output {
+  flex: 1;
+  padding: 10px;
+  overflow-y: auto;
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.terminal-line {
+  margin-bottom: 5px;
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+.terminal-prompt {
+  color: #0f0;
+  margin-right: 8px;
+}
+
+.terminal-welcome {
+  color: #0cf;
+  font-style: italic;
+}
+
+.terminal-error {
+  color: #f44;
+}
+
+.terminal-success {
+  color: #4f4;
+}
+
+.terminal-input-container {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background: #111;
+  border-top: 1px solid #333;
+}
+
+.terminal-input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: #fff;
+  font-family: 'Courier New', monospace;
+  font-size: 14px;
+  outline: none;
+  padding: 5px;
+}
+
+.terminal-input::placeholder {
+  color: #777;
+}
+
+/* Command history */
+.command-history {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  max-height: 200px;
+  overflow-y: auto;
+  background: #222;
+  border: 1px solid #444;
+  display: none;
+  z-index: 10;
+}
+
+.command-history-item {
+  padding: 5px 10px;
+  cursor: pointer;
+}
+
+.command-history-item:hover, .command-history-item.selected {
+  background: #333;
+}
+
+/* Ensure buttons in the title bar are still clickable */
+.title-bar button,
+.title-bar input,
+.title-bar select,
+.tabs,
+.tab-button {
+  -webkit-app-region: no-drag;
+  cursor: pointer;
+}
+
+/* Suggested Commands Styles */
+.suggested-commands-container {
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+  margin: 5px 0;
+  padding: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  display: none;
+}
+
+.suggested-heading {
+  font-weight: bold;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.suggested-command {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  background-color: rgba(255, 255, 255, 0.05);
+  transition: background-color 0.2s;
+}
+
+.suggested-command:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.suggested-command-text {
+  flex: 1;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 8px;
+}
+
+.suggested-command-explanation {
+  color: var(--text-secondary);
+  font-size: 0.9em;
+  margin-right: 10px;
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.run-command-btn, .copy-command-btn {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  cursor: pointer;
+  font-size: 18px;
+  transition: color 0.2s, transform 0.2s;
+  margin-left: 5px;
+}
+
+.run-command-btn:hover, .copy-command-btn:hover {
+  color: var(--accent);
+  transform: scale(1.1);
+}
+
+.suggested-command-executed {
+  color: var(--accent);
+  font-weight: bold;
+}
+
+/* Settings section for terminal execution */
+.setting-checkbox {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.setting-checkbox input[type="checkbox"] {
+  margin-right: 10px;
+}
+
+.setting-description {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  margin-top: 0;
+}
+
+/* Make the terminal tab stand out when there are suggested commands */
+.tab-button.has-suggestions {
+  position: relative;
+}
+
+.tab-button.has-suggestions::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+  50% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.8;
+  }
+}
+
+.terminal-output-text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: monospace;
+  font-size: 14px;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.terminal-error {
+  color: #ff5252;
+}
+
+.terminal-success {
+  color: #4caf50;
+}
+
+.terminal-info {
+  color: #2196f3;
+}
+
+.terminal-welcome {
+  color: #ff9800;
+}
+
+/* Command buttons within chat */
+.run-in-terminal-btn {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 10px;
+  padding: 8px 14px;
+  background-color: var(--accent);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.run-in-terminal-btn:hover {
+  background-color: #006ecc;
+  transform: translateY(-1px);
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+}
+
+.run-in-terminal-btn::before {
+  content: '▶️';
+  margin-right: 6px;
+  font-size: 14px;
+}
+
+/* Formatted content in AI messages */
+.formatted-content {
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.formatted-content p {
+  margin-bottom: 12px;
+}
+
+.formatted-content ul, .formatted-content ol {
+  margin: 8px 0;
+  padding-left: 20px;
+}
+
+.formatted-content li {
+  margin-bottom: 6px;
+}
+
+/* Code blocks */
+.code-block {
+  background-color: rgba(30, 30, 30, 0.9);
+  color: #f8f8f8;
+  border-radius: 6px;
+  padding: 12px;
+  margin: 12px 0;
+  font-family: 'Courier New', monospace;
+  font-size: 13px;
+  line-height: 1.4;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  border-left: 3px solid var(--accent);
+}
+
+/* Syntax highlighting for bash */
+.language-bash .comment,
+.language-shell .comment {
+  color: #6a9955;
+}
+
+.language-bash .command,
+.language-shell .command {
+  color: #569cd6;
+}
+
+/* Inline code */
+.inline-code {
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 2px 4px;
+  font-family: 'Courier New', monospace;
+  font-size: 0.9em;
+} 

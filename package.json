@@ -1,0 +1,72 @@
+{
+  "name": "devops-sticky-helper",
+  "version": "1.0.0",
+  "description": "A desktop tool for DevOps professionals with chat assistant and terminal features",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --dev",
+    "build": "electron-builder",
+    "build:win": "electron-builder --win",
+    "build:mac": "electron-builder --mac",
+    "build:linux": "electron-builder --linux"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/devops-sticky-helper.git"
+  },
+  "keywords": [
+    "electron",
+    "devops",
+    "tools",
+    "assistant",
+    "chat",
+    "terminal"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yourusername/devops-sticky-helper/issues"
+  },
+  "homepage": "https://github.com/yourusername/devops-sticky-helper#readme",
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^24.4.0"
+  },
+  "dependencies": {},
+  "build": {
+    "appId": "com.yourdomain.devops-sticky-helper",
+    "productName": "DevOps Sticky Helper",
+    "files": [
+      "*.js",
+      "preload.js",
+      "index.html",
+      "styles.css",
+      "utils.js",
+      "sessions.js",
+      "terminal.js",
+      "renderer-main.js"
+    ],
+    "directories": {
+      "buildResources": "resources"
+    },
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "resources/icon.ico"
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "icon": "resources/icon.icns"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "icon": "resources/icon.png"
+    }
+  }
+}
